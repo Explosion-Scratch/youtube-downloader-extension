@@ -1,0 +1,33 @@
+{
+    "name": "YouTube downloader",
+    "description": "A simple, no frills, no viruses YouTube downloader that the world has always wanted.",
+    "manifest_version": 2,
+    "version": "1.0.0",
+    "permissions": ["activeTab", "contextMenus"],
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "content_security_policy": "default-src 'self' 'unsafe-eval'; frame-src https://vid.puffyan.us; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.ytimg.com data:; font-src 'self' data:;",
+    "background": { "page": "background.html" },
+    "icons": {
+        "16": "icon-16_x_16.png",
+        "32": "icon-32_x_32.png",
+        "48": "icon-48_x_48.png",
+        "128": "icon-128_x_128.png",
+        "256": "icon-256_x_256.png"
+    },
+    "commands": {
+        "audio": {
+            "suggested_key": {
+                "default": "Alt+A"
+            },
+            "description": "Download the current YouTube tab's audio"
+        },
+        "video": {
+            "suggested_key": {
+                "default": "Alt+V"
+            },
+            "description": "Download the current YouTube tab's video"
+        }
+    }
+}

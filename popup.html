@@ -1,0 +1,84 @@
+<body class='flex justify-center items-center'>
+    <div id="app">
+        <template v-if="tab">
+        <div id="overlay" v-if="loading" class="w-full h-full fixed bg-white bg-opacity-80 flex justify-center items-center italic text-lg text-gray-400">Downloading...</div>
+        <div v-if="!isYouTube()" class="w-full h-full flex justify-center items-center flex-col">
+            <h2 class="text-lg font-bold text-gray-700">Sorry!</h2>
+            <p style="font-size: .8rem;" class="px-4 py-1 italic font-light text-gray-500">Open this extension on a YouTube tab to download. Or you can search here:</p>
+            <input style="font-size: .8rem; border: 2px solid #FF512F" class="mx-auto w-5/6 my-2 p-4 rounded focus:outline-none shadow-xl text-gray-500 placeholder:text-gray-300" @keyup.enter="search" v-model="ytquery" placeholder="Search YouTube"/>
+            <button @click="search" class="w-5/6 mx-auto px-4 py-2 rounded shadow-sm focus:outline-none primary" data-itag="22">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z" fill="currentColor"></path></svg>
+                Search
+            </button>
+        </div>
+        <div v-else class="download_container m-4 rounded border-2 border-dashed p-4 border-gray-200">
+            <img :src="'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg'" class="object-cover rounded shadow-md w-5/6 mx-auto"></img>
+            <h2 class="text-xl font-extralight text-gray-600 mt-2">{{slice(tab.title.split("- YouTube")[0], 40)}}</h2>
+            <p class="italic text-gray-500 text-lg mt-2 mb-1">Download:</p>
+            <div class='buttons flex items-center flex-row'>
+                <button @click="download($event.target.getAttribute('data-itag'))" class="w-full px-4 py-2 rounded shadow-sm focus:outline-none primary" data-itag="22">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path opacity=".3" d="M5 8h10v8H5z" fill="currentColor"></path><path d="M17 7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4V7zm-2 9H5V8h10v8z" fill="currentColor"></path></svg>
+                    Video
+                </button>
+                <button @click="download($event.target.getAttribute('data-itag'))" class="w-full px-4 py-2 rounded shadow-sm hover:bg-blue-100 secondary text-gray-600" data-itag="139">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="32" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="10" cy="17" opacity=".3" r="2" fill="currentColor"></circle><path d="M10 21c2.21 0 4-1.79 4-4V7h4V3h-6v10.55c-.59-.34-1.27-.55-2-.55c-2.21 0-4 1.79-4 4s1.79 4 4 4zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2s-2-.9-2-2s.9-2 2-2z" fill="currentColor"></path></svg>
+                    Audio
+                </button>
+            </div>
+        </div>
+    </div>
+    </template>
+    </div>
+</body>
+<script src="vue.js"></script>
+<script src="popup.js"></script>
+<link rel="stylesheet" href="tailwind.min.css" />
+<style type="text/css" media="all">
+    * {
+        box-sizing: border-box;
+        font-family: monospace;
+    }
+
+    body {
+        width: 350px;
+    }
+    body, html {
+        height: fit-content;
+    }
+    .primary {
+        color: white;
+        background-image: linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%);
+        background-size: 200% auto;
+    }
+
+    button {
+        margin: 4px;
+        padding: 15px 45px;
+        text-align: center;
+        transition: 0.5s;
+        font-size: .9rem;
+        box-shadow: 0 0 20px #eee;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    button svg {
+        margin-right: 4px;
+        width: 2.3ch;
+    }
+
+    .secondary {
+        background-image: radial-gradient(circle at 100% 100%, transparent 8px, #ff512f 8px, #ff512f 10px, transparent 10px), linear-gradient(to right, #ff512f, #00bfa5), radial-gradient(circle at 0% 100%, transparent 8px, #00bfa5 8px, #00bfa5 10px, transparent 10px), linear-gradient(to bottom, #00bfa5, #ff512f), radial-gradient(circle at 0% 0%, transparent 8px, #ff512f 8px, #ff512f 10px, transparent 10px), linear-gradient(to left, #ff512f, #dd2476), radial-gradient(circle at 100% 0%, transparent 8px, #dd2476 8px, #dd2476 10px, transparent 10px), linear-gradient(to top, #dd2476, #ff512f);
+        background-size: 10px 10px, calc(100% - 20px) 2px, 10px 10px, 2px calc(100% - 20px);
+        background-position: top left, top center, top right, center right, bottom right, bottom center, bottom left, center left;
+        background-repeat: no-repeat;
+    }
+
+    .primary:hover {
+        background-position: right center;
+        /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
